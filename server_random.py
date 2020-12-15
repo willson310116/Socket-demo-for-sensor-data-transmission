@@ -1,6 +1,7 @@
 import socket
 import traceback
 import time
+import random
 
 class SocketServer():
     def __init__(self, host="127.0.0.1", port=8080):
@@ -18,8 +19,7 @@ class SocketServer():
             # () -> tuple (any, any) -> (int, str)
             self.sock.bind((self.host, self.port))
             # time out
-            # self.sock.settimeout(2)
-            # f-string f""  
+            # self.sock.settimeout(2)  
             print(f"listen on {self.host}, {self.port}")
             self.sock.listen(1) # wait blocking -> sleep
             (conn, address) = self.sock.accept()
@@ -68,11 +68,22 @@ if __name__ == "__main__":
     socket_server.initialize()
     conn = socket_server.listen() #from  (conn, address) = self.sock.accept()
     while True:
-        message = input("What do you want to send: ")
-        socket_server.send_text(conn, message)
-        msg = socket_server.recv_text(conn)
-        print(msg)
-        if message == "q":
+        # message = input("What do you want to send: ")
+        x = input("r for random data/ q for quit: ")
+        if x == "r":
+            message = ""
+            for i in range(15):
+                message += str(round(random.uniform(1,10),2))
+                message += ","
+
+            message = message[:-1]
+            socket_server.send_text(conn, message)
+            msg = socket_server.recv_text(conn)
+            print(msg)
+            # time.sleep(1)
+            # print(message)
+            
+        if x == "q":
             print("quit")
             #socket.SHUT_RDWR
             '''
@@ -80,8 +91,17 @@ if __name__ == "__main__":
             socket.SHUT_RDWR
             socket.close()
             '''
+            message = "q"
+            socket_server.send_text(conn, message)
+            msg = socket_server.recv_text(conn)
+            print(msg)
             socket_server.close_conn(conn)
             break
+
+        # socket_server.send_text(conn, message)
+        # msg = socket_server.recv_text(conn)
+        # print(msg)
+        # # time.sleep(1)
             
     
     socket_server.close_socket()

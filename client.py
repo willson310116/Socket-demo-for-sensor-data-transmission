@@ -37,52 +37,21 @@ class SocketClient():
     def close(self):
         self.sock.close()
     
-# def file_initialize(file):
-#     with open(file, 'w', newline='') as csvfile:
-#         writer = csv.writer(csvfile)
-#         writer.writerow(["Test1","Test2","Test3"])
-
-    # 寫入資料
-    # writer.writerow(["ClO2 ppm","Temp(C)","Temp(F)","RH","water level",
-    #   "pm1.0","pm2.5","pm4.5","pm10.0",
-    #   "nc0.5","nc1.0","nc2.5","nc4.5","nc10.0","typical partical size"])
-    
-
-# def add_data(data,file):
-#     with open(file, 'a+', newline='') as csvfile:
-#         writer = csv.writer(csvfile)
-#         writer.writerow(data)
-
-# def show_data(file):
-#     with open(file, newline='') as csvfile:
-#         rows = csv.reader(csvfile)
-#         for row in rows:
-#             print(row)
-#             #print(type(row))
-
 def data_process(data):
     data = str(data)
-    print(type(data))
+    # print(type(data))
     data = data[2:-1]
     data = data.split(",")
     return data
 
-# file_name = "test.csv"
-# file_name = input("Type file name(csv): ")
-
 if __name__ == "__main__":
-    socket_client = SocketClient(remote="127.0.0.1", port=9997)
-    #socket_client = SocketClient(remote="192.168.1.104", port=9998)
+    socket_client = SocketClient(remote="127.0.0.1", port=9999)
     socket_client.initialize()
     socket_client.connect()
 
-    #file_initialize(file_name)
-    #show_data(file_name)
     count = 0
 
     # create dataframe
-    #df = pd.DataFrame({"test1":[],"test2":[],"test3":[]})
-
     df = pd.DataFrame({"ClO2 ppm":[],"Temp(C)":[],"Temp(F)":[],"RH":[],"water level":[],
         "pm1.0":[],"pm2.5":[],"pm4.5":[],"pm10.0":[],
         "nc0.5":[],"nc1.0":[],"nc2.5":[],"nc4.5":[],"nc10.0":[],"typical partical size":[]})
@@ -102,8 +71,8 @@ if __name__ == "__main__":
             socket_client.send_text("Client has received!")
             data = data_process(data) # return a fine list
 
-            # Need to refresh data, here default refresh if more than 3 data
-            if(count>2):
+            # Need to refresh data, here default refresh if more than for example 3 data (just for demo)
+            if(count > 2):
                 count = 0
                 df.loc[count] = data
                 count += 1
@@ -120,19 +89,11 @@ if __name__ == "__main__":
             df = df.append(new,ignore_index=True) #append new data to last row
             df.to_csv("data.csv",encoding="utf-8",index=0)
             '''
-
-
-            '''
-            df = pd.read_csv(file_name) # read file as pd
-            data = data_process(data) # return a fine list
-            add_data(data,file_name) # add to output file
-            '''
             print(df.head())
             print("-----------")
             # print(df.describe()) pandas don't recognize the data as int
             df = df.astype(float) # change data in dataframe into float type
             print(df.describe())
-            # print(df.astype(float).describe())
             print("----------------------------")
             df.to_csv("data.csv",encoding="utf-8",index=0)
 
@@ -146,5 +107,3 @@ if __name__ == "__main__":
     print("----------------------------")
     print(df.describe())
     
-
-
