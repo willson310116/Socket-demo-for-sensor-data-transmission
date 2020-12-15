@@ -7,7 +7,7 @@ ClO2 ppm, Temp(C), Temp(F), RH(%), water level, pm1.0, pm2.5,pm4.5, pm10.0, nc0.
 Total 15 kinds of data need to be transmitted instantly.
 - Socket with TCP protocol:
 
-![](https://i.imgur.com/KIMQ1Td.png =350x400)
+![](https://i.imgur.com/KIMQ1Td.png)
 
 - Excepted display GUI
 
